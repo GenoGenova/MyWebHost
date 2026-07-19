@@ -1,2 +1,0 @@
-# MyWebHost
-WebHosting
