@@ -33,7 +33,7 @@ Everything you'd want to change lives in the `DATA` section near the top of the
 - `BREAKFASTS` — rotating breakfast ideas
 - `GYM_PLAN` — exercise list, sets/reps, starting/target kg, and icons
 - `BOOKS` — weekend reading list
-- `TIPS` — the small rotating daily tip
+- `tips.json` (separate file, not in the script) — the daily tip pool, grouped by category (food, focus, gym, reading)
 - `WEEK` — the Mon–Sun schedule blocks
 
 ## Using a real photo instead of an emoji icon for an exercise
@@ -48,6 +48,15 @@ Everything you'd want to change lives in the `DATA` section near the top of the
    Raw/working source files (other formats, duplicates, .psd) go in `_assets/_Sources/` and aren't referenced by the page.
 
 Currently `_assets/TreadMill.jpg` is wired up for the Treadmill entry.
+
+## A note on tips.json
+
+The daily tip is loaded from `tips.json` via `fetch()`, which browsers only allow over http/https —
+not when you double-click `index.html` and open it as a local `file://` page. So:
+- On GitHub Pages (or any real web server), it works normally.
+- Opened directly as a local file, it silently falls back to a single built-in tip instead of erroring.
+- To test it locally with the real tip rotation, run a tiny local server from this folder, e.g.
+  `python -m http.server` (Python) or `npx serve` (Node), then open `http://localhost:8000/`.
 
 ## Publishing on GitHub Pages
 

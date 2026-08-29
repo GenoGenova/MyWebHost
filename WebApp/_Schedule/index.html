@@ -30,31 +30,67 @@
     padding:24px 16px 60px;
   }
   .wrap{max-width:880px;margin:0 auto;}
-  .banner{
+  .section-banner{
     position:relative;
     width:100%;
-    height:180px;
+    height:120px;
     border-radius:var(--radius);
     overflow:hidden;
-    margin-bottom:22px;
-    background:linear-gradient(135deg,var(--card2),var(--card));
+    margin-bottom:14px;
+    background-color:var(--card);
+    background-size:cover;
+    background-position:center;
     border:1px solid var(--line);
   }
-  .banner img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-  }
-  .banner .banner-fade{
+  .section-banner .section-banner-fade{
     position:absolute;
     inset:0;
-    background:linear-gradient(180deg, rgba(15,17,21,0) 40%, rgba(15,17,21,0.85) 100%);
-    pointer-events:none;
+    background:linear-gradient(180deg, rgba(15,17,21,0.1) 0%, rgba(15,17,21,0.8) 100%);
   }
 
-  header{margin-bottom:28px;}
-  h1{font-size:1.6rem;margin:0 0 4px;}
+  .hero{
+    position:relative;
+    border-radius:var(--radius);
+    overflow:hidden;
+    padding:22px 20px;
+    margin-bottom:20px;
+    background-color:var(--card);
+    border:1px solid var(--line);
+  }
+  .hero-bg{
+    position:absolute;
+    inset:-12px; /* slight overscan so the animation never reveals an edge */
+    background-size:cover;
+    background-repeat:no-repeat; /* without this, an offset position tiles/repeats */
+    background-position:center var(--hero-offset, 20%);
+    animation:heroPan 80s ease-in-out infinite;
+  }
+  /* --hero-offset is a PERCENTAGE (not px) set from JS, randomly picked per
+     day. Percentages self-scale to however much vertical slack each photo
+     actually has after "cover" sizing, so a portrait photo (lots of slack)
+     and a wide landscape photo (very little slack) both stay safely inside
+     the image — no risk of ever running out of image and showing a blank
+     gap, which is what a fixed px offset did on the wider photos.
+     0% = image top-aligned (crops the bottom), 50% = centered, 100% =
+     bottom-aligned (crops the top). The pan is asymmetric: quick rise
+     (0% -> 30% of the cycle), slower fall back down (30% -> 100%). */
+  @keyframes heroPan{
+    0%   { background-position:center calc(var(--hero-offset, 20%) - 6%); }
+    30%  { background-position:center calc(var(--hero-offset, 20%) + 6%); }
+    100% { background-position:center calc(var(--hero-offset, 20%) - 6%); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .hero-bg{ animation:none; background-position:center var(--hero-offset, 20%); }
+  }
+  .hero-overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(160deg, rgba(15,17,21,0.08) 0%, rgba(15,17,21,0.62) 80%);
+  }
+  .hero-content{position:relative;z-index:1;}
+
+  header{margin-bottom:14px;}
+  h1{font-size:1.6rem;margin:0 0 4px;text-shadow:0 1px 6px rgba(0,0,0,0.4);}
   .sub{color:var(--muted);font-size:0.95rem;}
 
   .tabs{display:flex;gap:8px;margin:20px 0;flex-wrap:wrap;}
@@ -148,7 +184,31 @@
     border-radius:12px;
     padding:14px;
   }
-  .breakfast-card .name{font-weight:600;margin-bottom:6px;color:var(--food);}
+  .breakfast-card .head{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+  }
+  .breakfast-card .icon{
+    width:40px;
+    height:40px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    font-size:1.3rem;
+    overflow:hidden;
+  }
+  .breakfast-card .icon img{
+    width:80%;
+    height:80%;
+    object-fit:contain;
+  }
+  .breakfast-card .name{font-weight:600;color:var(--food);}
   .breakfast-card ul{margin:0;padding-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.5;}
 
   .ex-row{
@@ -235,11 +295,10 @@
   .book-card .note{color:var(--muted);font-size:0.85rem;margin-top:2px;}
 
   .tip-box{
-    background:linear-gradient(135deg,var(--card2),var(--card));
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:16px 18px;
-    margin-bottom:20px;
+    background:rgba(23,26,33,0.55);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:10px;
+    padding:14px 16px;
     font-size:0.92rem;
     color:var(--text);
   }
@@ -279,17 +338,17 @@
 <body>
 <div class="wrap">
 
-  <div class="banner" id="dailyBanner">
-    <img id="dailyBannerImg" alt="">
-    <div class="banner-fade"></div>
+  <div class="hero" id="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <header>
+        <h1>Vincent Weekly Schedule</h1>
+        <div class="sub" id="todayLine"></div>
+      </header>
+      <div class="tip-box" id="tipBox"></div>
+    </div>
   </div>
-
-  <header>
-    <h1>Vincent Weekly Schedule</h1>
-    <div class="sub" id="todayLine"></div>
-  </header>
-
-  <div class="tip-box" id="tipBox"></div>
 
   <div class="tabs">
     <button class="tab-btn active" data-tab="week">Week</button>
@@ -312,6 +371,7 @@
 
   <!-- BREAKFAST VIEW -->
   <section class="panel" id="panel-breakfast">
+    <div class="section-banner" id="bannerBreakfast"><div class="section-banner-fade"></div></div>
     <div class="card">
       <h3>Rotating breakfast ideas</h3>
       <p class="sub" style="margin-top:-4px;">Simple, low-effort, high-protein. Pick a different one each day so it doesn't get boring — edit the list in the HTML file whenever you want to change it up.</p>
@@ -321,6 +381,7 @@
 
   <!-- GYM VIEW -->
   <section class="panel" id="panel-gym">
+    <div class="section-banner" id="bannerGym"><div class="section-banner-fade"></div></div>
     <div class="card">
       <h3>Full Body — restart plan</h3>
       <p class="sub" style="margin-top:-4px;">Back to training after a break: whole-body sessions first to rebuild a base, before moving to a split (e.g. push/pull/legs) later.</p>
@@ -330,6 +391,7 @@
 
   <!-- READING VIEW -->
   <section class="panel" id="panel-reading">
+    <div class="section-banner" id="bannerReading"><div class="section-banner-fade"></div></div>
     <div class="card">
       <h3>Weekend reading list</h3>
       <p class="sub" style="margin-top:-4px;">A gentle reminder for Saturday / Sunday downtime.</p>
@@ -351,20 +413,27 @@
 <script>
 /* ======================= DATA — edit freely ======================= */
 
+// Same icon system as GYM_PLAN: "icon" is the emoji fallback, or add
+// img: "_assets/yourfile.png" (+ imgFlat: true for a transparent-bg icon)
+// to swap in a real picture per breakfast, e.g. Coffee.avif.
 const BREAKFASTS = [
   {
+    icon: "🥣",
     name: "Greek yogurt + muesli",
     items: ["Greek yogurt", "Muesli", "A boiled or fried egg", "Coffee"]
   },
   {
+    icon: "🍳",
     name: "Scrambled eggs on toast",
     items: ["2 eggs, scrambled", "Wholegrain toast + avocado or butter", "Coffee"]
   },
   {
+    icon: "🌾",
     name: "Overnight oats (prep the night before)",
     items: ["Oats + milk or yogurt, soaked overnight", "Chia seeds + a handful of fruit/berries", "Coffee"]
   },
   {
+    icon: "🧀",
     name: "Cottage cheese + fruit",
     items: ["Cottage cheese or quark", "Honey + a chopped fruit", "A slice of wholegrain bread", "Coffee"]
   }
@@ -408,16 +477,6 @@ const BOOKS = [
   { icon: "🤖", title: "The Society of Mind", author: "Marvin Minsky" }
 ];
 
-const TIPS = [
-  "Prep your gym bag the night before — one less decision in the morning.",
-  "Drink a glass of water right after waking up, before coffee.",
-  "10 minutes of stretching after work makes the 19h session feel easier.",
-  "Batch-cook breakfast items (boiled eggs, overnight oats) on Sunday for the week.",
-  "Protein + fiber at breakfast keeps you full until lunch.",
-  "Rest is part of training — don't skip sleep to make up for gym time.",
-  "Weekend reading doesn't need a schedule slot — even 15 minutes counts."
-];
-
 // Weekly schedule. type: work | gym | food | read | free
 const WEEK = {
   Monday: [
@@ -458,18 +517,34 @@ const WEEK = {
 
 /* ======================= Rendering ======================= */
 
-const WEEKEND_DAYS = ["Saturday", "Sunday"];
-// Daily banner photo — Lorem Picsum (no API key, safe to hotlink), seeded off
-// today's date so it's the same picture all day and changes automatically
-// each day. Falls back to the plain gradient background if offline.
+// Hero photo rotation. One is picked at random each day (stable all day,
+// changes tomorrow) — add more filenames here any time. All use the same
+// 20% vertical anchor (percentage, not px — see the CSS note on .hero-bg
+// for why percentages are what keep this safe across very different photo
+// aspect ratios).
+const HERO_IMAGES = ["Baloon.jpg", "Baloon_2.jpg", "Baloon_3.jpg", "Baloon_4.jpg"];
 (function () {
-  const today = new Date();
-  const seed = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, "0")}${String(today.getDate()).padStart(2, "0")}`;
-  const img = document.getElementById("dailyBannerImg");
-  img.onerror = () => { img.style.display = "none"; };
-  img.src = `https://picsum.photos/seed/${seed}/1600/400`;
-})();
+  const heroBg = document.getElementById("heroBg");
+  const todayKey = new Date().toISOString().slice(0, 10);
 
+  // Separate hash "salt" from the tip-of-the-day picker so the two don't
+  // always land on the same index together.
+  let hash = 0;
+  const seed = "hero-" + todayKey;
+  for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+
+  const image = HERO_IMAGES[hash % HERO_IMAGES.length];
+  heroBg.style.backgroundImage = `url("_assets/${image}")`;
+  heroBg.style.setProperty("--hero-offset", "20%");
+})();
+document.getElementById("bannerBreakfast").style.backgroundImage =
+  'url("_assets/Breakfast.jpg")';
+document.getElementById("bannerGym").style.backgroundImage =
+  'url("_assets/BG_gym.webp")';
+document.getElementById("bannerReading").style.backgroundImage =
+  'url("_assets/Book.jpg")';
+
+const WEEKEND_DAYS = ["Saturday", "Sunday"];
 const weekGridWeekdays = document.getElementById("weekGridWeekdays");
 const weekGridWeekend = document.getElementById("weekGridWeekend");
 const todayName = new Date().toLocaleDateString("en-US", { weekday: "long" });
@@ -493,7 +568,16 @@ const breakfastGrid = document.getElementById("breakfastGrid");
 BREAKFASTS.forEach(b => {
   const el = document.createElement("div");
   el.className = "breakfast-card";
-  el.innerHTML = `<div class="name">${b.name}</div><ul>${b.items.map(i => `<li>${i}</li>`).join("")}</ul>`;
+  const iconHtml = b.img
+    ? `<img src="${b.img}" alt="${b.name}" class="${b.imgFlat ? "icon-flat" : ""}">`
+    : b.icon;
+  el.innerHTML = `
+    <div class="head">
+      <div class="icon">${iconHtml}</div>
+      <div class="name">${b.name}</div>
+    </div>
+    <ul>${b.items.map(i => `<li>${i}</li>`).join("")}</ul>
+  `;
   breakfastGrid.appendChild(el);
 });
 
@@ -524,8 +608,73 @@ BOOKS.forEach(b => {
   bookGrid.appendChild(el);
 });
 
-document.getElementById("tipBox").innerHTML =
-  `<b>Tip of the day:</b> ${TIPS[new Date().getDate() % TIPS.length]}`;
+// Tip of the day — loaded from tips.json (categories: food, focus, gym, reading).
+// Picks one per calendar day, avoiding the last 5 tips already shown, and
+// remembers the day's pick in localStorage so it doesn't change on refresh.
+// Falls back to a tiny built-in tip if tips.json can't be loaded (e.g. opened
+// as a local file:// page instead of served over http/https).
+(function () {
+  const CATEGORY_LABEL = { food: "Food", focus: "Focus", gym: "Gym motivation", reading: "Reading motivation" };
+  const STORAGE_KEY = "vincentScheduleTipState";
+  const todayKey = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
+  function renderTip(category, text) {
+    document.getElementById("tipBox").innerHTML =
+      `<b>${CATEGORY_LABEL[category] || "Tip"} of the day:</b> ${text}`;
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : { lastDate: "", lastId: "", recentIds: [] };
+    } catch (e) {
+      return { lastDate: "", lastId: "", recentIds: [] };
+    }
+  }
+
+  function saveState(state) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+  }
+
+  // Simple deterministic hash so the same date always picks the same tip
+  // (stable across tabs/reloads on the same day) without needing Math.random.
+  function seededIndex(str, max) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+    }
+    return hash % max;
+  }
+
+  fetch("tips.json")
+    .then(r => r.json())
+    .then(data => {
+      const all = [];
+      Object.entries(data).forEach(([category, list]) => {
+        list.forEach((text, i) => all.push({ id: `${category}-${i}`, category, text }));
+      });
+
+      const state = loadState();
+
+      // Already picked today -> reuse it (don't change on refresh).
+      if (state.lastDate === todayKey) {
+        const found = all.find(t => t.id === state.lastId);
+        if (found) { renderTip(found.category, found.text); return; }
+      }
+
+      // Otherwise pick a new one, avoiding the last 5 shown.
+      let pool = all.filter(t => !state.recentIds.includes(t.id));
+      if (pool.length === 0) pool = all; // safety net, shouldn't normally happen
+
+      const pick = pool[seededIndex(todayKey, pool.length)];
+      const recentIds = [...state.recentIds, pick.id].slice(-5);
+      saveState({ lastDate: todayKey, lastId: pick.id, recentIds });
+      renderTip(pick.category, pick.text);
+    })
+    .catch(() => {
+      renderTip("food", "Drink a glass of water right after waking up, before coffee.");
+    });
+})();
 
 // Point the "drag me" bookmark link at wherever this page is actually hosted,
 // so it works correctly whether it's on GitHub Pages, a custom domain, etc.

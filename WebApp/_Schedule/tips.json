@@ -1,0 +1,30 @@
+{
+  "food": [
+    "Drink a glass of water right after waking up, before coffee.",
+    "Prep breakfast the night before so mornings need zero decisions.",
+    "Protein first, carbs second — it keeps you full until lunch.",
+    "Keep a bag of nuts or fruit at your desk for when hunger hits before lunch.",
+    "Batch-cook eggs on Sunday — a boiled egg is breakfast in 10 seconds."
+  ],
+  "focus": [
+    "Close every tab you're not using right now — fewer tabs, fewer decisions.",
+    "Write down tomorrow's first task before you log off today.",
+    "One notification check per hour beats twenty small interruptions.",
+    "Do the hardest task first, while your focus is freshest.",
+    "Stand up and stretch for 2 minutes every hour — it resets your attention."
+  ],
+  "gym": [
+    "You don't have to feel motivated to start — motivation usually shows up after the first set.",
+    "A short session beats a skipped one. Show up, even for 20 minutes.",
+    "Progress isn't linear — a slower week doesn't erase the last one.",
+    "Pack your gym bag the night before so 19h has one less excuse.",
+    "Three years off doesn't reset to zero — your body remembers faster than you think."
+  ],
+  "reading": [
+    "Two books a year is the goal — one page tonight is already ahead of schedule.",
+    "Getting lost in your own ideas while reading isn't a distraction, it's part of it.",
+    "A slow chapter on Saturday still counts as progress.",
+    "No need to finish in one sitting — put it down anywhere, pick it up anywhere.",
+    "Reading 10 minutes beats scrolling 10 minutes."
+  ]
+}
