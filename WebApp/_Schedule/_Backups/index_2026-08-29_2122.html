@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vincent Weekly Schedule</title>
+<style>
+  :root{
+    --bg:#0f1115;
+    --card:#171a21;
+    --card2:#1e222c;
+    --line:#2a2f3a;
+    --text:#e8eaed;
+    --muted:#9aa1ac;
+    --accent:#5eead4;
+    --accent2:#f472b6;
+    --accent3:#facc15;
+    --work:#60a5fa;
+    --gym:#f87171;
+    --food:#fbbf24;
+    --read:#a78bfa;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    padding:24px 16px 60px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{margin-bottom:28px;}
+  h1{font-size:1.6rem;margin:0 0 4px;}
+  .sub{color:var(--muted);font-size:0.95rem;}
+
+  .tabs{display:flex;gap:8px;margin:20px 0;flex-wrap:wrap;}
+  .tab-btn{
+    background:var(--card);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:0.85rem;
+    cursor:pointer;
+  }
+  .tab-btn.active{background:var(--accent);color:#0f1115;border-color:var(--accent);font-weight:600;}
+
+  .day-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:14px;
+  }
+  .week-group{margin-bottom:26px;}
+  .week-group:last-child{margin-bottom:0;}
+  .week-group-title{
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--muted);
+    font-weight:700;
+    margin:0 0 10px;
+  }
+  .day-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
+  }
+  .day-card.today{
+    border-color:var(--accent);
+    background:rgba(94,234,212,0.06);
+  }
+  .day-card h2{
+    font-size:1.05rem;
+    margin:0 0 12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .day-card h2 .tag{
+    font-size:0.7rem;
+    color:var(--muted);
+    font-weight:400;
+  }
+  .block{
+    display:flex;
+    gap:10px;
+    padding:8px 0;
+    border-top:1px solid var(--line);
+  }
+  .block:first-of-type{border-top:none;}
+  .block .dot{
+    width:8px;height:8px;border-radius:50%;
+    margin-top:6px;flex-shrink:0;
+  }
+  .block .time{
+    font-size:0.75rem;
+    color:var(--muted);
+    min-width:78px;
+  }
+  .block .what{font-size:0.9rem;line-height:1.3;}
+  .dot.work{background:var(--work);}
+  .dot.gym{background:var(--gym);}
+  .dot.food{background:var(--food);}
+  .dot.read{background:var(--read);}
+  .dot.free{background:var(--muted);}
+
+  section.panel{display:none;}
+  section.panel.active{display:block;}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px;
+    margin-bottom:16px;
+  }
+  .card h3{margin:0 0 10px;font-size:1.05rem;}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+
+  .breakfast-card{
+    background:var(--card2);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px;
+  }
+  .breakfast-card .name{font-weight:600;margin-bottom:6px;color:var(--food);}
+  .breakfast-card ul{margin:0;padding-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.5;}
+
+  .ex-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 0;
+    border-top:1px solid var(--line);
+    font-size:0.92rem;
+  }
+  .ex-row:first-of-type{border-top:none;}
+  .ex-row .icon{
+    font-size:3rem;
+    width:90px;
+    height:90px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--card2);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  .ex-row .icon img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+  /* Flat icon-style images (transparent PNG) sit inside the grey box with
+     a little padding instead of being cropped edge-to-edge like a photo. */
+  .ex-row .icon img.icon-flat{
+    width:80%;
+    height:80%;
+    object-fit:contain;
+  }
+  .ex-row .info{flex:1;min-width:0;}
+  .ex-row .name{font-weight:500;}
+  .ex-row .detail{color:var(--muted);font-size:0.85rem;}
+  .ex-row .weight{
+    color:var(--accent);
+    font-size:0.82rem;
+    font-weight:600;
+    text-align:right;
+    min-width:110px;
+  }
+  .ex-row .weight small{
+    display:block;
+    color:var(--muted);
+    font-weight:400;
+    font-size:0.72rem;
+  }
+  .weight-note{
+    color:var(--muted);
+    font-size:0.8rem;
+    margin-top:14px;
+    padding-top:12px;
+    border-top:1px solid var(--line);
+    line-height:1.5;
+  }
+  .tips-card{
+    background:var(--card2);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px 16px;
+    margin-bottom:16px;
+    font-size:0.88rem;
+    color:var(--muted);
+    line-height:1.6;
+  }
+  .tips-card b{color:var(--read);}
+
+  .book-card{
+    background:var(--card2);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .book-card .icon{font-size:1.6rem;}
+  .book-card .title{font-weight:600;}
+  .book-card .note{color:var(--muted);font-size:0.85rem;margin-top:2px;}
+
+  .tip-box{
+    background:linear-gradient(135deg,var(--card2),var(--card));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    margin-bottom:20px;
+    font-size:0.92rem;
+    color:var(--text);
+  }
+  .tip-box b{color:var(--accent);}
+
+  footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:0.78rem;
+    margin-top:40px;
+  }
+
+  .bookmarklet-bar{
+    margin-top:28px;
+    margin-bottom:20px;
+    text-align:center;
+  }
+  .bookmarklet-bar a.bookmarklet{
+    display:inline-block;
+    background:var(--card2);
+    border:1px solid var(--line);
+    color:var(--accent);
+    text-decoration:none;
+    font-size:0.9rem;
+    font-weight:600;
+    padding:8px 16px;
+    border-radius:999px;
+    cursor:grab;
+  }
+  .bookmarklet-bar a.bookmarklet:active{cursor:grabbing;}
+
+  @media(max-width:480px){
+    .day-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Vincent Weekly Schedule</h1>
+    <div class="sub" id="todayLine"></div>
+  </header>
+
+  <div class="tip-box" id="tipBox"></div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="week">Week</button>
+    <button class="tab-btn" data-tab="breakfast">Breakfast ideas</button>
+    <button class="tab-btn" data-tab="gym">Gym plan</button>
+    <button class="tab-btn" data-tab="reading">Weekend reading</button>
+  </div>
+
+  <!-- WEEK VIEW -->
+  <section class="panel active" id="panel-week">
+    <div class="week-group">
+      <h3 class="week-group-title">Weekdays</h3>
+      <div class="day-grid" id="weekGridWeekdays"></div>
+    </div>
+    <div class="week-group">
+      <h3 class="week-group-title">Weekend</h3>
+      <div class="day-grid" id="weekGridWeekend"></div>
+    </div>
+  </section>
+
+  <!-- BREAKFAST VIEW -->
+  <section class="panel" id="panel-breakfast">
+    <div class="card">
+      <h3>Rotating breakfast ideas</h3>
+      <p class="sub" style="margin-top:-4px;">Simple, low-effort, high-protein. Pick a different one each day so it doesn't get boring — edit the list in the HTML file whenever you want to change it up.</p>
+      <div class="grid2" id="breakfastGrid"></div>
+    </div>
+  </section>
+
+  <!-- GYM VIEW -->
+  <section class="panel" id="panel-gym">
+    <div class="card">
+      <h3>Full Body — restart plan</h3>
+      <p class="sub" style="margin-top:-4px;">Back to training after a break: whole-body sessions first to rebuild a base, before moving to a split (e.g. push/pull/legs) later.</p>
+      <div id="gymList"></div>
+    </div>
+  </section>
+
+  <!-- READING VIEW -->
+  <section class="panel" id="panel-reading">
+    <div class="card">
+      <h3>Weekend reading list</h3>
+      <p class="sub" style="margin-top:-4px;">A gentle reminder for Saturday / Sunday downtime.</p>
+      <div class="tips-card">
+        <b>Your pace:</b> the goal is <b>2 books a year</b> — one every ~6 months, so there's no rush at all.
+        Spread over a weekend-only pace, that's roughly <b>5–10 pages a day</b> for an average book.
+        Getting pulled into your own ideas while reading isn't losing focus, it's just how you read —
+        a slow page with your mind wandering still counts as progress.
+      </div>
+      <div class="grid2" id="bookGrid"></div>
+    </div>
+  </section>
+
+  <div class="bookmarklet-bar">
+    <a class="bookmarklet" id="scheduleBookmarklet" href="#">📅 Vincent's Schedule</a>
+  </div>
+</div>
+
+<script>
+/* ======================= DATA — edit freely ======================= */
+
+const BREAKFASTS = [
+  {
+    name: "Greek yogurt + muesli",
+    items: ["Greek yogurt", "Muesli", "A boiled or fried egg", "Coffee"]
+  },
+  {
+    name: "Scrambled eggs on toast",
+    items: ["2 eggs, scrambled", "Wholegrain toast + avocado or butter", "Coffee"]
+  },
+  {
+    name: "Overnight oats (prep the night before)",
+    items: ["Oats + milk or yogurt, soaked overnight", "Chia seeds + a handful of fruit/berries", "Coffee"]
+  },
+  {
+    name: "Cottage cheese + fruit",
+    items: ["Cottage cheese or quark", "Honey + a chopped fruit", "A slice of wholegrain bread", "Coffee"]
+  }
+];
+
+const GYM_PLAN = {
+  title: "Full body (Trainer template)",
+  // Starting/target kg: aligned close to Vincent's previous working weights
+  // (converted from lb, logged in his old trainer app before a ~3 year break —
+  // see weightNote per exercise) rather than a very light restart. Still move
+  // up only once the last 2 reps of every set feel easy, and back off on any
+  // exercise that feels genuinely off, especially shoulders/lower back which
+  // lose stability fastest during time off.
+  //
+  // To use a real picture instead of the emoji icon: drop the image into
+  // the _assets folder next to this file, then add an "img" property here,
+  // e.g. img: "_assets/KettlebellSquat.jpg" — it will replace the emoji automatically.
+  //
+  // Two image styles are supported:
+  //  - Flat icon on a transparent PNG background -> also add imgFlat: true
+  //    so it's shown fully inside the grey rounded box (not cropped).
+  //  - Full photo (like the treadmill one) -> leave imgFlat out, it fills
+  //    the box edge-to-edge like a photo thumbnail.
+  exercises: [
+    { icon: "🏃", img: "_assets/gym_treadmill.png", imgFlat: true, name: "Treadmill", detail: "10:00 warm-up", weight: "—" },
+    { icon: "🏋️", img: "_assets/gym_kettlebell_front_squat.png", imgFlat: true, name: "Kettlebell Front Squat", detail: "4 sets × 12 reps", weight: "16 kg → 26 kg", weightNote: "≈ your old 35 lb, add 2kg every 2 weeks" },
+    { icon: "🦵", img: "_assets/gym_reverse_lunges.png", imgFlat: true, name: "Reverse Lunges", detail: "3 sets × 10 reps", weight: "16 kg → 24 kg", weightNote: "single kettlebell, goblet-style — ≈ your old 35 lb" },
+    { icon: "🚣", img: "_assets/gym_trx_row_close.png", imgFlat: true, name: "TRX Row Close", detail: "4 sets × 12 reps", weight: "bodyweight", weightNote: "harder = lean back further" },
+    { icon: "🤸", img: "_assets/gym_pushups_decline.png", imgFlat: true, name: "Push-ups Decline", detail: "4 sets × 10 reps", weight: "bodyweight", weightNote: "lower the box as you progress" },
+    { icon: "🙆", img: "_assets/gym_dumbbell_lateral_raises.png", imgFlat: true, name: "Dumbbell Lateral Raises", detail: "3 sets × 12 reps", weight: "2×6 kg → 2×9 kg", weightNote: "≈ your old 26.5 lb — shoulders fatigue fast, keep strict form" },
+    { icon: "💪", img: "_assets/gym_dumbbell_french_press_lying.png", imgFlat: true, name: "Dumbbell French Press Lying", detail: "3 sets × 12 reps", weight: "2×5 kg → 2×8 kg", weightNote: "≈ your old 23.5 lb — triceps" },
+    { icon: "💪", img: "_assets/gym_dumbbell_bicep_curls.png", imgFlat: true, name: "Dumbbell Bicep Curls", detail: "3 sets × 12 reps", weight: "2×5 kg → 2×10 kg", weightNote: "≈ your old 22 lb" },
+    { icon: "🏀", img: "_assets/gym_medicine_ball_crunches.png", imgFlat: true, name: "Medicine Ball Crunches (arms extended)", detail: "3 sets × 15 reps", weight: "4 kg → 6 kg", weightNote: "≈ your old 8.8 lb" },
+    { icon: "🌀", img: "_assets/gym_russian_twist_sitting.png", imgFlat: true, name: "Russian Twist Sitting", detail: "3 sets × 20 reps", weight: "3 kg → 5 kg", weightNote: "≈ your old 6.6 lb" }
+  ]
+};
+
+const BOOKS = [
+  { icon: "📈", title: "Trend Following", author: "Michael Covel" },
+  { icon: "🧠", title: "Resilience, Confidence & Positive Thinking", author: "" },
+  { icon: "🤖", title: "The Society of Mind", author: "Marvin Minsky" }
+];
+
+const TIPS = [
+  "Prep your gym bag the night before — one less decision in the morning.",
+  "Drink a glass of water right after waking up, before coffee.",
+  "10 minutes of stretching after work makes the 19h session feel easier.",
+  "Batch-cook breakfast items (boiled eggs, overnight oats) on Sunday for the week.",
+  "Protein + fiber at breakfast keeps you full until lunch.",
+  "Rest is part of training — don't skip sleep to make up for gym time.",
+  "Weekend reading doesn't need a schedule slot — even 15 minutes counts."
+];
+
+// Weekly schedule. type: work | gym | food | read | free
+const WEEK = {
+  Monday: [
+    { time: "07:00", type: "food", what: "Breakfast (see rotation)" },
+    { time: "09:00–17:00", type: "work", what: "Work" },
+    { time: "19:00–21:00", type: "gym", what: "Gym — Full Body plan" }
+  ],
+  Tuesday: [
+    { time: "07:00", type: "food", what: "Breakfast (see rotation)" },
+    { time: "09:00–17:00", type: "work", what: "Work" },
+    { time: "19:00–21:00", type: "gym", what: "Gym — Full Body plan" }
+  ],
+  Wednesday: [
+    { time: "07:00", type: "food", what: "Breakfast (see rotation)" },
+    { time: "09:00–17:00", type: "work", what: "Work" },
+    { time: "19:00–21:00", type: "gym", what: "Gym — Full Body plan" }
+  ],
+  Thursday: [
+    { time: "07:00", type: "food", what: "Breakfast (see rotation)" },
+    { time: "09:00–17:00", type: "work", what: "Work" },
+    { time: "19:00–21:00", type: "free", what: "Rest / light activity" }
+  ],
+  Friday: [
+    { time: "07:00", type: "food", what: "Breakfast (see rotation)" },
+    { time: "09:00–17:00", type: "work", what: "Work" },
+    { time: "19:00–21:00", type: "gym", what: "Gym — Full Body plan" }
+  ],
+  Saturday: [
+    { time: "morning", type: "free", what: "Free / errands" },
+    { time: "afternoon", type: "read", what: "Reading time — pick up one of the 3 books" }
+  ],
+  Sunday: [
+    { time: "morning", type: "free", what: "Free" },
+    { time: "afternoon", type: "read", what: "Reading time — pick up one of the 3 books" },
+    { time: "evening", type: "free", what: "Prep breakfast items for the week" }
+  ]
+};
+
+/* ======================= Rendering ======================= */
+
+const WEEKEND_DAYS = ["Saturday", "Sunday"];
+const weekGridWeekdays = document.getElementById("weekGridWeekdays");
+const weekGridWeekend = document.getElementById("weekGridWeekend");
+const todayName = new Date().toLocaleDateString("en-US", { weekday: "long" });
+
+Object.entries(WEEK).forEach(([day, blocks]) => {
+  const card = document.createElement("div");
+  const isToday = todayName === day;
+  card.className = "day-card" + (isToday ? " today" : "");
+  card.innerHTML = `<h2>${day} ${isToday ? '<span class="tag">today</span>' : ''}</h2>` +
+    blocks.map(b => `
+      <div class="block">
+        <div class="dot ${b.type}"></div>
+        <div class="time">${b.time}</div>
+        <div class="what">${b.what}</div>
+      </div>
+    `).join("");
+  (WEEKEND_DAYS.includes(day) ? weekGridWeekend : weekGridWeekdays).appendChild(card);
+});
+
+const breakfastGrid = document.getElementById("breakfastGrid");
+BREAKFASTS.forEach(b => {
+  const el = document.createElement("div");
+  el.className = "breakfast-card";
+  el.innerHTML = `<div class="name">${b.name}</div><ul>${b.items.map(i => `<li>${i}</li>`).join("")}</ul>`;
+  breakfastGrid.appendChild(el);
+});
+
+const gymList = document.getElementById("gymList");
+gymList.innerHTML = GYM_PLAN.exercises.map(e => `
+  <div class="ex-row">
+    <div class="icon">${e.img ? `<img src="${e.img}" alt="${e.name}" class="${e.imgFlat ? 'icon-flat' : ''}">` : e.icon}</div>
+    <div class="info">
+      <div class="name">${e.name}</div>
+      <div class="detail">${e.detail}</div>
+    </div>
+    <div class="weight">${e.weight}${e.weightNote ? `<small>${e.weightNote}</small>` : ""}</div>
+  </div>
+`).join("") + `
+  <div class="weight-note">
+    Weights are a starting estimate based on your stats (174 cm, 68 kg, 40y, restarting after ~3 years off) —
+    not a fixed rule. Begin at the lower number for the first 1–2 sessions to reset your form, then progress
+    toward the higher number only once the last 2 reps of each set stop feeling hard. Ease off if any joint
+    (shoulders, lower back, knees) feels off — soreness is fine, pain is not.
+  </div>
+`;
+
+const bookGrid = document.getElementById("bookGrid");
+BOOKS.forEach(b => {
+  const el = document.createElement("div");
+  el.className = "book-card";
+  el.innerHTML = `<div class="icon">${b.icon}</div><div><div class="title">${b.title}</div><div class="note">${b.author}</div></div>`;
+  bookGrid.appendChild(el);
+});
+
+document.getElementById("tipBox").innerHTML =
+  `<b>Tip of the day:</b> ${TIPS[new Date().getDate() % TIPS.length]}`;
+
+// Point the "drag me" bookmark link at wherever this page is actually hosted,
+// so it works correctly whether it's on GitHub Pages, a custom domain, etc.
+document.getElementById("scheduleBookmarklet").href = window.location.href;
+
+document.getElementById("todayLine").textContent =
+  new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("panel-" + btn.dataset.tab).classList.add("active");
+  });
+});
+</script>
+</body>
+</html>

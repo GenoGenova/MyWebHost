@@ -30,6 +30,29 @@
     padding:24px 16px 60px;
   }
   .wrap{max-width:880px;margin:0 auto;}
+  .banner{
+    position:relative;
+    width:100%;
+    height:180px;
+    border-radius:var(--radius);
+    overflow:hidden;
+    margin-bottom:22px;
+    background:linear-gradient(135deg,var(--card2),var(--card));
+    border:1px solid var(--line);
+  }
+  .banner img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .banner .banner-fade{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, rgba(15,17,21,0) 40%, rgba(15,17,21,0.85) 100%);
+    pointer-events:none;
+  }
+
   header{margin-bottom:28px;}
   h1{font-size:1.6rem;margin:0 0 4px;}
   .sub{color:var(--muted);font-size:0.95rem;}
@@ -51,11 +74,25 @@
     grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
     gap:14px;
   }
+  .week-group{margin-bottom:26px;}
+  .week-group:last-child{margin-bottom:0;}
+  .week-group-title{
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--muted);
+    font-weight:700;
+    margin:0 0 10px;
+  }
   .day-card{
     background:var(--card);
     border:1px solid var(--line);
     border-radius:var(--radius);
     padding:16px;
+  }
+  .day-card.today{
+    border-color:var(--accent);
+    background:rgba(94,234,212,0.06);
   }
   .day-card h2{
     font-size:1.05rem;
@@ -215,6 +252,25 @@
     margin-top:40px;
   }
 
+  .bookmarklet-bar{
+    margin-top:28px;
+    margin-bottom:20px;
+    text-align:center;
+  }
+  .bookmarklet-bar a.bookmarklet{
+    display:inline-block;
+    background:var(--card2);
+    border:1px solid var(--line);
+    color:var(--accent);
+    text-decoration:none;
+    font-size:0.9rem;
+    font-weight:600;
+    padding:8px 16px;
+    border-radius:999px;
+    cursor:grab;
+  }
+  .bookmarklet-bar a.bookmarklet:active{cursor:grabbing;}
+
   @media(max-width:480px){
     .day-grid{grid-template-columns:1fr;}
   }
@@ -222,6 +278,11 @@
 </head>
 <body>
 <div class="wrap">
+
+  <div class="banner" id="dailyBanner">
+    <img id="dailyBannerImg" alt="">
+    <div class="banner-fade"></div>
+  </div>
 
   <header>
     <h1>Vincent Weekly Schedule</h1>
@@ -239,7 +300,14 @@
 
   <!-- WEEK VIEW -->
   <section class="panel active" id="panel-week">
-    <div class="day-grid" id="weekGrid"></div>
+    <div class="week-group">
+      <h3 class="week-group-title">Weekdays</h3>
+      <div class="day-grid" id="weekGridWeekdays"></div>
+    </div>
+    <div class="week-group">
+      <h3 class="week-group-title">Weekend</h3>
+      <div class="day-grid" id="weekGridWeekend"></div>
+    </div>
   </section>
 
   <!-- BREAKFAST VIEW -->
@@ -266,16 +334,18 @@
       <h3>Weekend reading list</h3>
       <p class="sub" style="margin-top:-4px;">A gentle reminder for Saturday / Sunday downtime.</p>
       <div class="tips-card">
-        <b>How much to read:</b> a relaxed reading pace is roughly 30–40 pages per hour. A 300-page book at
-        <b>25–30 pages/day</b> (about 45–60 min) finishes in <b>2 weeks</b> reading daily, or in
-        <b>4–5 weekends</b> if you only read Sat/Sun (~60–75 pages per weekend day). No pressure —
-        even one chapter a weekend keeps the book moving.
+        <b>Your pace:</b> the goal is <b>2 books a year</b> — one every ~6 months, so there's no rush at all.
+        Spread over a weekend-only pace, that's roughly <b>5–10 pages a day</b> for an average book.
+        Getting pulled into your own ideas while reading isn't losing focus, it's just how you read —
+        a slow page with your mind wandering still counts as progress.
       </div>
       <div class="grid2" id="bookGrid"></div>
     </div>
   </section>
 
-  <footer>Edit the DATA section at the top of the script to change days, gym plan, breakfasts or books.</footer>
+  <div class="bookmarklet-bar">
+    <a class="bookmarklet" id="scheduleBookmarklet" href="#">📅 Vincent's Schedule</a>
+  </div>
 </div>
 
 <script>
@@ -388,11 +458,26 @@ const WEEK = {
 
 /* ======================= Rendering ======================= */
 
-const weekGrid = document.getElementById("weekGrid");
+const WEEKEND_DAYS = ["Saturday", "Sunday"];
+// Daily banner photo — Lorem Picsum (no API key, safe to hotlink), seeded off
+// today's date so it's the same picture all day and changes automatically
+// each day. Falls back to the plain gradient background if offline.
+(function () {
+  const today = new Date();
+  const seed = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, "0")}${String(today.getDate()).padStart(2, "0")}`;
+  const img = document.getElementById("dailyBannerImg");
+  img.onerror = () => { img.style.display = "none"; };
+  img.src = `https://picsum.photos/seed/${seed}/1600/400`;
+})();
+
+const weekGridWeekdays = document.getElementById("weekGridWeekdays");
+const weekGridWeekend = document.getElementById("weekGridWeekend");
+const todayName = new Date().toLocaleDateString("en-US", { weekday: "long" });
+
 Object.entries(WEEK).forEach(([day, blocks]) => {
   const card = document.createElement("div");
-  card.className = "day-card";
-  const isToday = new Date().toLocaleDateString("en-US", { weekday: "long" }) === day;
+  const isToday = todayName === day;
+  card.className = "day-card" + (isToday ? " today" : "");
   card.innerHTML = `<h2>${day} ${isToday ? '<span class="tag">today</span>' : ''}</h2>` +
     blocks.map(b => `
       <div class="block">
@@ -401,7 +486,7 @@ Object.entries(WEEK).forEach(([day, blocks]) => {
         <div class="what">${b.what}</div>
       </div>
     `).join("");
-  weekGrid.appendChild(card);
+  (WEEKEND_DAYS.includes(day) ? weekGridWeekend : weekGridWeekdays).appendChild(card);
 });
 
 const breakfastGrid = document.getElementById("breakfastGrid");
@@ -441,6 +526,10 @@ BOOKS.forEach(b => {
 
 document.getElementById("tipBox").innerHTML =
   `<b>Tip of the day:</b> ${TIPS[new Date().getDate() % TIPS.length]}`;
+
+// Point the "drag me" bookmark link at wherever this page is actually hosted,
+// so it works correctly whether it's on GitHub Pages, a custom domain, etc.
+document.getElementById("scheduleBookmarklet").href = window.location.href;
 
 document.getElementById("todayLine").textContent =
   new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });

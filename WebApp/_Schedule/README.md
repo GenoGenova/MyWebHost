@@ -9,13 +9,21 @@ No build step — just open `index.html` in a browser, or publish it with GitHub
 _Schedule/
 ├── index.html       <- the whole page (HTML + CSS + JS in one file)
 ├── _assets/
-│   ├── gym_*.png     <- the icons actually used by index.html (500x500, transparent PNG)
-│   └── _Sources/      <- original/raw exports, duplicates, .psd working file (not used by the page)
+│   └── gym_*.png     <- the icons actually used by index.html (500x500, transparent PNG)
+├── _Backups/          <- timestamped snapshots of index.html, saved before bigger edits
 └── README.md
 ```
 
+(`_Sources/` — the original/raw icon exports, duplicates, and the .psd working file — now lives one
+level up, next to `_Schedule/`, since it's not part of the published page.)
+
 Icon filenames follow `gym_<exercise_name>.png` (lowercase, underscores, no spaces or dashes) and
 are all resized to exactly 500x500px with transparency preserved.
+
+## Reverting to a previous version
+
+`_Backups/` holds dated copies of `index.html` (e.g. `index_2026-08-29_2112.html`). To roll back,
+just copy one of those over `index.html`.
 
 ## Editing content
 
