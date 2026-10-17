@@ -7,20 +7,20 @@ This directory contains the optimized SVG vector graphics used across the applic
 ## 📂 Available SVGs & Previews
 All graphic assets are located within the `_SVGs/` subdirectory.
 
-### 🖼️ Vector Previews (32x32 Max)
+### 🖼️ Vector Previews (32x32 Max · Dark & Light Mode Alternatives)
 
-* **`Bull.svg`** — <img src="./_SVGs/Bull.svg" alt="Bull Icon" width="32" height="32" align="center" />
-* **`BullMarket_1.svg`** — <img src="./_SVGs/BullMarket_1.svg" alt="Bull Market 1 Icon" width="32" height="32" align="center" />
-* **`BullMarket_2.svg`** — <img src="./_SVGs/BullMarket_2.svg" alt="Bull Market 2 Icon" width="32" height="32" align="center" />
-* **`BullMarket_5.svg`** — <img src="./_SVGs/BullMarket_5.svg" alt="Bull Market 5 Icon" width="32" height="32" align="center" />
-* **`BullMarket_6.svg`** — <img src="./_SVGs/BullMarket_6.svg" alt="Bull Market 6 Icon" width="32" height="32" align="center" />
-* **`Market.svg`** — <img src="./_SVGs/Market.svg" alt="Market Icon" width="32" height="32" align="center" />
-* **`Sector_Technology_4.svg`** — <img src="./_SVGs/Sector_Technology_4.svg" alt="Sector Technology 4 Icon" width="32" height="32" align="center" />
-* **`Sector_Technology_5.svg`** — <img src="./_SVGs/Sector_Technology_5.svg" alt="Sector Technology 5 Icon" width="32" height="32" align="center" />
-* **`Sector_Technology_6.svg`** — <img src="./_SVGs/Sector_Technology_6.svg" alt="Sector Technology 6 Icon" width="32" height="32" align="center" />
-* **`Sector_Technology_7.svg`** — <img src="./_SVGs/Sector_Technology_7.svg" alt="Sector Technology 7 Icon" width="32" height="32" align="center" />
-* **`World.svg`** — <img src="./_SVGs/World.svg" alt="World Icon" width="32" height="32" align="center" />
-* **`wave.svg`** — <img src="./_SVGs/wave.svg" alt="Wave Icon" width="32" height="32" align="center" />
+* **`Bull.svg`** — <img src="./_SVGs/Bull.svg" alt="Bull Icon" width="32" height="32" align="center" /> · <img src="./_SVGs/Bull.svg" alt="Bull Icon White" width="32" height="32" align="center" style="filter: invert(1) brightness(2);" />
+* **`BullMarket_1.svg`** — <img src="./_SVGs/BullMarket_1.svg" alt="Bull Market 1 Icon" width="32" height="32" align="center" /> · <img src="./_SVGs/BullMarket_1.svg" alt="Bull Market 1 Icon White" width="32" height="32" align="center" style="filter: invert(1) brightness(2);" />
+* **`BullMarket_2.svg`** — <img src="./_SVGs/BullMarket_2.svg" alt="Bull Market 2 Icon" width="32" height="32" align="center" /> · <img src="./_SVGs/BullMarket_2.svg" alt="Bull Market 2 Icon White" width="32" height="32" align="center" style="filter: invert(1) brightness(2);" />
+* **`BullMarket_5.svg`** — <img src="./_SVGs/BullMarket_5.svg" alt="Bull Market 5 Icon" width="32" height="32" align="center" /> · <img src="./_SVGs/BullMarket_5.svg" alt="Bull Market 5 Icon White" width="32" height="32" align="center" style="filter: invert(1) brightness(2);" />
+* **`BullMarket_6.svg`** — <img src="./_SVGs/BullMarket_6.svg" alt="Bull Market 6 Icon" width="32" height="32" align="center" /> · <img src="./_SVGs/BullMarket_6.svg" alt="Bull Market 6 Icon White" width="32" height="32" align="center" style="filter: invert(1) brightness(2);" />
+* **`Market.svg`** — <img src="./_SVGs/Market.svg" alt="Market Icon" width="32" height="32" align="center" /> · <img src="./_SVGs/Market.svg" alt="Market Icon White" width="32" height="32" align="center" style="filter: invert(1) brightness(2);" />
+* **`Sector_Technology_4.svg`** — <img src="./_SVGs/Sector_Technology_4.svg" alt="Sector Technology 4 Icon" width="32" height="32" align="center" /> · <img src="./_SVGs/Sector_Technology_4.svg" alt="Sector Technology 4 Icon White" width="32" height="32" align="center" style="filter: invert(1) brightness(2);" />
+* **`Sector_Technology_5.svg`** — <img src="./_SVGs/Sector_Technology_5.svg" alt="Sector Technology 5 Icon" width="32" height="32" align="center" /> · <img src="./_SVGs/Sector_Technology_5.svg" alt="Sector Technology 5 Icon White" width="32" height="32" align="center" style="filter: invert(1) brightness(2);" />
+* **`Sector_Technology_6.svg`** — <img src="./_SVGs/Sector_Technology_6.svg" alt="Sector Technology 6 Icon" width="32" height="32" align="center" /> · <img src="./_SVGs/Sector_Technology_6.svg" alt="Sector Technology 6 Icon White" width="32" height="32" align="center" style="filter: invert(1) brightness(2);" />
+* **`Sector_Technology_7.svg`** — <img src="./_SVGs/Sector_Technology_7.svg" alt="Sector Technology 7 Icon" width="32" height="32" align="center" /> · <img src="./_SVGs/Sector_Technology_7.svg" alt="Sector Technology 7 Icon White" width="32" height="32" align="center" style="filter: invert(1) brightness(2);" />
+* **`World.svg`** — <img src="./_SVGs/World.svg" alt="World Icon" width="32" height="32" align="center" /> · <img src="./_SVGs/World.svg" alt="World Icon White" width="32" height="32" align="center" style="filter: invert(1) brightness(2);" />
+* **`wave.svg`** — <img src="./_SVGs/wave.svg" alt="Wave Icon" width="32" height="32" align="center" /> · <img src="./_SVGs/wave.svg" alt="Wave Icon White" width="32" height="32" align="center" style="filter: invert(1) brightness(2);" />
 
 ---
 
