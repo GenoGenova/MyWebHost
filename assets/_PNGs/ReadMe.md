@@ -10,16 +10,16 @@ All graphic assets are located within the `FinDashboard/` subdirectory.
 ### 🖼️ Graphic Previews
 
 * **`icon-32.png`** — Standard 32x32 pixel dashboard interface asset.
-  ![Icon 32](./FinDashboard/icon-32.png)
+  <img src="./FinDashboard/icon-32.png" alt="Icon 32" width="32" height="32" />
 
 * **`apple-touch-icon.png`** — Native shortcut icon for iOS/Apple home screens.
-  ![Apple Touch Icon](./FinDashboard/apple-touch-icon.png)
+  <img src="./FinDashboard/apple-touch-icon.png" alt="Apple Touch Icon" width="32" height="32" />
 
 * **`icon-192.png`** — Progressive Web App (PWA) standard Android launch icon.
-  ![Icon 192](./FinDashboard/icon-192.png)
+  <img src="./FinDashboard/icon-192.png" alt="Icon 192" width="32" height="32" />
 
 * **`logo-512.png`** — High-resolution splash screen and main application logo.
-  ![Logo 512](./FinDashboard/logo-512.png)
+  <img src="./FinDashboard/logo-512.png" alt="Logo 512" width="32" height="32" />
 
 * **`favicon.ico`** — Legacy browser tab shortcut file. *(Note: Browsers and GitHub do not natively preview `.ico` files directly inside Markdown text).*
 
