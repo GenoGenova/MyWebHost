@@ -5,21 +5,21 @@ This directory contains the core visual branding and icon assets used across the
 ---
 
 ## 📂 Available Brand Assets & Previews
-All graphic assets are located within the `assets/_PNGs/FinDashboard/` directory.
+All graphic assets are located within the `FinDashboard/` subdirectory.
 
 ### 🖼️ Graphic Previews
 
 * **`icon-32.png`** — Standard 32x32 pixel dashboard interface asset.
-  ![Icon 32](https://githubusercontent.com)
+  ![Icon 32](./FinDashboard/icon-32.png)
 
 * **`apple-touch-icon.png`** — Native shortcut icon for iOS/Apple home screens.
-  ![Apple Touch Icon](https://githubusercontent.com)
+  ![Apple Touch Icon](./FinDashboard/apple-touch-icon.png)
 
 * **`icon-192.png`** — Progressive Web App (PWA) standard Android launch icon.
-  ![Icon 192](https://githubusercontent.com)
+  ![Icon 192](./FinDashboard/icon-192.png)
 
 * **`logo-512.png`** — High-resolution splash screen and main application logo.
-  ![Logo 512](https://githubusercontent.com)
+  ![Logo 512](./FinDashboard/logo-512.png)
 
 * **`favicon.ico`** — Legacy browser tab shortcut file. *(Note: Browsers and GitHub do not natively preview `.ico` files directly inside Markdown text).*
 
@@ -28,7 +28,7 @@ All graphic assets are located within the `assets/_PNGs/FinDashboard/` directory
 ## 🛠️ Usage Implementation
 
 ### HTML Integration
-To drop these assets into your web project layouts, use the absolute raw paths:
+To drop these assets into your external web projects, use the absolute paths:
 
 ```html
 <!-- 32x32 UI Icon -->
